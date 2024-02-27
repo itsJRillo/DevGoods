@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import React from "react";
 
 export default function Header() {
@@ -13,12 +12,12 @@ export default function Header() {
             <li>
               <details>
                 <summary>Shop</summary>
-                <ul className="p-2">
+                <ul className="p-2 text-sm">
                   <li>
-                    <a>Product Category 1</a>
+                    <Link href="/products">Products</Link>
                   </li>
                   <li>
-                    <a>Product Category 2</a>
+                    <Link href="/services">Services</Link>
                   </li>
                 </ul>
               </details>
@@ -101,9 +100,9 @@ export default function Header() {
               stroke="currentColor"
             >
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
               />
             </svg>
@@ -112,7 +111,7 @@ export default function Header() {
             <div className="modal-box">
               <h3 className="font-bold text-lg">Hello!</h3>
               <p className="py-3">
-                Press ESC key or click the button below to close
+                Carrito
               </p>
               <div className="modal-action">
                 <form method="dialog">

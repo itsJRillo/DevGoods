@@ -116,7 +116,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "components/Filters.jsx"  ],
   "exclude": [
     "node_modules"
   ]
