@@ -5,10 +5,10 @@ type Card = {
     name: string
     price: number
     description: string
-    provider: string
+    brand: string
 }
 
-export default function ProductCard({ name, price, description, provider }: Card) {
+export default function ProductCard({ name, price, description, brand }: Card) {
     return (
         <>
             <div className="card w-70 bg-base-100 shadow-xl">

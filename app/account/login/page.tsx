@@ -1,29 +1,43 @@
 "use client";
 
-import { createClient } from '@supabase/supabase-js';
 import React, { useState } from 'react'
+import supabase from '../../supabaseClient';
+import { useRouter } from 'next/navigation'
+import Link from 'next/link';
+import { toast } from 'react-toastify';
 
 export default function Login() {
 
-  const supabase = createClient("https://asoqdvxkiasjqgcrwbmm.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFzb3FkdnhraWFzanFnY3J3Ym1tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDg5MzU5MDUsImV4cCI6MjAyNDUxMTkwNX0.rMW6cOlEVKZlUFbuIvR33XOYLUdqrjYfnaVqhi-Z9xE");
-
+  const router = useRouter()
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const handleEmail = (event: React.FormEvent<HTMLInputElement>) => {
+    setEmail(event.currentTarget.value)
+  }
 
-  function submitLogin(event: React.FormEvent<HTMLButtonElement>) {
-  
-    <div className="toast">
-      <div className="alert alert-info">
-        <span>{event.currentTarget.value}</span>
-      </div>
-    </div>
-    
+  const handlePassword = (event: React.FormEvent<HTMLInputElement>) => {
+    setPassword(event.currentTarget.value)
+  }
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password
+    })
+
+    if (error) {
+      toast(error.message)
+    } else {
+      router.push("/")
+    }
+
   }
 
   return (
     <>
-
       <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <svg
@@ -43,7 +57,7 @@ export default function Login() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
+          <form className="space-y-6" method="POST" onSubmit={(e) => { handleSubmit(e) }}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                 Email address
@@ -55,6 +69,7 @@ export default function Login() {
                   type="email"
                   autoComplete="email"
                   required
+                  onChange={handleEmail}
                   className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
@@ -78,6 +93,7 @@ export default function Login() {
                   type="password"
                   autoComplete="current-password"
                   required
+                  onChange={handlePassword}
                   className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
@@ -95,9 +111,9 @@ export default function Login() {
 
           <p className="mt-10 text-center text-sm text-gray-500">
             You don’t have an account?{' '}
-            <a href="#" className="leading-6 text-indigo-600 hover:text-indigo-500 font-bold">
+            <Link href="/account/register" className="leading-6 text-indigo-600 hover:text-indigo-500 font-bold">
               Register now
-            </a>
+            </Link>
           </p>
         </div>
       </div>

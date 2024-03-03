@@ -20,7 +20,7 @@ export default function Footer() {
           DevGoods C. <br />
           Providing reliable tech since 2024
         </p>
-        <p>Copyright © 2024 - All right reserved</p>
+        <p>Made by <span className="underline">Ismael Morillo</span></p>
       </aside>
       <nav>
         <div className="grid grid-flow-col gap-4">

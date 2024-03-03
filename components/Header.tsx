@@ -1,9 +1,27 @@
 "use client";
+
 import Link from "next/link";
-import React from "react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+
+import supabase from "../app/supabaseClient";
+import { User } from "@supabase/supabase-js";
 
 export default function Header() {
+  const [user, setUser] = useState<User>()
 
+  useEffect(() => {
+    setUser(JSON.parse(localStorage.getItem("sb-iovmeejceocblildcubg-auth-token") || "{}").user)
+    console.log(user?.user_metadata);
+  }, [])
+
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (!error) {
+      window.location.reload()
+    }
+  };
+  
   return (
     <>
       <div className="navbar bg-base-100">
@@ -62,31 +80,54 @@ export default function Header() {
             </svg>
           </button>
 
-          <Link href="/account/login" className="btn btn-ghost btn-circle">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width={40}
-              height={40}
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke="#000"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M16.5 9a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"
-                clipRule="evenodd"
-              />
-              <path
-                stroke="#000"
-                strokeLinecap="round"
-                strokeWidth={1.5}
-                d="M5.5 19a13.282 13.282 0 0 1 14 0"
-              />
-            </svg>
-          </Link>
-
+          {user?.id != null ? (
+            <>
+              <div className="dropdown dropdown-end">
+                <div tabIndex={0} role="button" className="avatar">
+                  <div className="w-12 rounded-full">
+                    <Image src={`/avatar_${user.user_metadata.username}.png`} width={10} height={10} alt="avatar"/>
+                  </div>
+                </div>
+                <ul tabIndex={0} className="menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4">
+                  <li>
+                    <div>
+                      <p className="font-bold">{user.user_metadata.username}</p>
+                      <p>{user.email}</p>
+                    </div>
+                  </li>
+                  <hr />
+                  <li><Link href="/account">Account</Link></li>
+                  <hr />
+                  <li><button onClick={() => { handleSignOut() }}>Log out</button></li>
+                </ul>
+                
+              </div>
+            </>
+          ) : (
+            <Link href="/account/login" className="btn btn-ghost btn-circle">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width={40}
+                height={40}
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke="#000"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M16.5 9a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"
+                  clipRule="evenodd"
+                />
+                <path
+                  stroke="#000"
+                  strokeLinecap="round"
+                  strokeWidth={1.5}
+                  d="M5.5 19a13.282 13.282 0 0 1 14 0"
+                />
+              </svg>
+            </Link>)}
 
           <button
             className="btn btn-ghost btn-circle"
