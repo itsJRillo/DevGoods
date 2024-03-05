@@ -2,15 +2,16 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link';
-import { decode } from 'base64-arraybuffer'
 import { useRouter } from 'next/navigation';
+
 import supabase from '../../supabaseClient';
-import AvatarPicker from '../../../components/AvatarPicker';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Register() {
     const router = useRouter()
 
-    const [avatar, setAvatar] = useState("");
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -27,6 +28,10 @@ export default function Register() {
         setPassword(event.currentTarget.value)
     }
 
+    const handleToast = (event: React.FormEvent<HTMLButtonElement>) => {
+
+    }
+
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
 
@@ -36,30 +41,59 @@ export default function Register() {
             options: {
                 data: {
                     username: username,
-                    avatar_url: avatar
+                    avatar_url: "profile-avatar.png"
                 }
             }
         })
+        
+        if (error) {
+            switch (error.status) {
+                case 400:
+                    toast.error(error.message, {
+                        position: 'top-right',
+                        autoClose: 5000, // milliseconds
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                    });
+                    break;
 
-        router.push("/")
+                case 422:
+                    toast.error(error.message, {
+                        position: 'top-right',
+                        autoClose: 5000, // milliseconds
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                    });
+                    break;
+
+                case 500:
+                    toast.error("Username already exists", {
+                        position: 'top-right',
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                    });
+                    break;
+            
+                default:
+                    break;
+            }
+        } else {
+            router.push("/")
+        }
     }
 
-    const handleAvatarChange = async (avatar: string) => {
-        const base64 = avatar.split('base64,')[1]
 
-        const { data, error } = await supabase
-            .storage
-            .from('avatars')
-            .upload(`public/avatar_${username}.png`, decode(base64), {
-                contentType: 'image/png',
-                cacheControl: '3600',
-                upsert: false  
-            })
-        setAvatar(`/avatar_${username}.png`)
-    };
 
     return (
         <>
+            <ToastContainer />
             <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <svg
@@ -155,8 +189,6 @@ export default function Register() {
                             </div>
                         </div>
 
-                        <AvatarPicker onAvatarChange={handleAvatarChange} />
-
                         <div>
                             <button
                                 type="submit"
@@ -175,6 +207,8 @@ export default function Register() {
                     </p>
                 </div>
             </div>
+
+
         </>
     )
 }

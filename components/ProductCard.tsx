@@ -8,7 +8,7 @@ type Card = {
     brand: string
 }
 
-export default function ProductCard({ name, price, description, brand }: Card) {
+export default function ProductCard({ name, price, description, brand, }: Card) {
     return (
         <>
             <div className="card w-70 bg-base-100 shadow-xl">

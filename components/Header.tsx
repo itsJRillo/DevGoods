@@ -9,10 +9,10 @@ import { User } from "@supabase/supabase-js";
 
 export default function Header() {
   const [user, setUser] = useState<User>()
+  const storageURL = "https://iovmeejceocblildcubg.supabase.co/storage/v1/object/public/avatars/public"
 
   useEffect(() => {
     setUser(JSON.parse(localStorage.getItem("sb-iovmeejceocblildcubg-auth-token") || "{}").user)
-    console.log(user?.user_metadata);
   }, [])
 
   const handleSignOut = async () => {
@@ -21,7 +21,7 @@ export default function Header() {
       window.location.reload()
     }
   };
-  
+
   return (
     <>
       <div className="navbar bg-base-100">
@@ -63,6 +63,7 @@ export default function Header() {
         </div>
 
         <div className="navbar-end gap-3">
+          {/* Search Button */}
           <button className="btn btn-ghost btn-circle">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -79,13 +80,14 @@ export default function Header() {
               />
             </svg>
           </button>
-
+        
+          {/* Avatar */}
           {user?.id != null ? (
             <>
               <div className="dropdown dropdown-end">
                 <div tabIndex={0} role="button" className="avatar">
                   <div className="w-12 rounded-full">
-                    <Image src={`/avatar_${user.user_metadata.username}.png`} width={10} height={10} alt="avatar"/>
+                    <img src={`${user?.id != null ? `${storageURL}/${user.user_metadata.avatar_url}`:`${storageURL}/profile-avatar.png`}`} alt="avatar" />
                   </div>
                 </div>
                 <ul tabIndex={0} className="menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4">
@@ -100,7 +102,7 @@ export default function Header() {
                   <hr />
                   <li><button onClick={() => { handleSignOut() }}>Log out</button></li>
                 </ul>
-                
+
               </div>
             </>
           ) : (
@@ -129,38 +131,36 @@ export default function Header() {
               </svg>
             </Link>)}
 
-          <button
-            className="btn btn-ghost btn-circle"
-            onClick={() => { }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-7 w-7"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-              />
-            </svg>
-          </button>
-          <dialog id="my_modal_1" className="modal">
-            <div className="modal-box">
-              <h3 className="font-bold text-lg">Hello!</h3>
-              <p className="py-3">
-                Carrito
-              </p>
-              <div className="modal-action">
-                <form method="dialog">
-                  <button className="btn">Close</button>
-                </form>
+          {/* Shopping Cart */}
+          <div>
+            <div className="drawer drawer-end">
+              <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
+              <div className="drawer-content">
+                <label htmlFor="my-drawer-4" className="drawer-button btn btn-ghost btn-circle">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-7 w-7"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                    /></svg>
+                </label>
+              </div>
+              <div className="drawer-side">
+                <label htmlFor="my-drawer-4" aria-label="close sidebar" className="drawer-overlay"></label>
+                <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
+                  Your cart is empty, for now :D
+                  {/* FUTURE IMPLEMENTATION: List of products added by the user */}
+                </ul>
               </div>
             </div>
-          </dialog>
+          </div>
         </div>
       </div>
     </>

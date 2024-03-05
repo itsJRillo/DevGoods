@@ -4,8 +4,6 @@ import "./globals.css";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import supabase from "./supabaseClient";
-import { ToastContainer, toast } from "react-toastify";
-import Toast from "../components/Toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,7 +22,7 @@ export default async function RootLayout({
 }>) {
 
   const { data: { user } } = await supabase.auth.getUser()
-  
+
   // if (user == true) {
   //   const { error } = await supabase
   //     .from('users')
@@ -42,9 +40,9 @@ export default async function RootLayout({
     <html lang="en" data-theme="lofi">
       <body className={inter.className}>
         <Header />
-        
+
         {children}
-        
+
         <Footer />
       </body>
     </html>

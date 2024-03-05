@@ -1,9 +1,11 @@
 import React from 'react'
+import { Novatrix } from "uvcanvas"
 
 export default function Hero() {
     return (
         <>
-            <div className="hero min-h-screen" style={{ backgroundImage: 'url(/hero-background.jpg)' }}>
+            <div className="hero min-h-screen">
+                <Novatrix />
                 <div className="hero-overlay bg-opacity-60"></div>
                 <div className="hero-content text-center text-neutral-content">
                     <div className="max-w-md">
