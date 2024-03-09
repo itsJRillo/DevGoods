@@ -9,10 +9,15 @@ import AvatarPicker from '../../components/AvatarPicker';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Tranquiluxe } from "uvcanvas"
+
+const storageURL = "https://iovmeejceocblildcubg.supabase.co/storage/v1/object/public/avatars/public"
 
 export default function Account() {
+
   const [currentUser, setCurrentUser] = useState<User | null>();
   const [avatar, setAvatar] = useState("");
+
 
   async function getUser() {
     const { data: { user } } = await supabase.auth.getUser();
@@ -26,23 +31,30 @@ export default function Account() {
   const handleAvatarChange = async (avatar: string) => {
     const base64 = avatar.split('base64,')[1];
     const image = decode(base64);
-    const urlImage = `avatar_${currentUser?.id}.png`;
+    const urlImage = `/avatar_${currentUser?.id}.png`;
 
     const { data, error } = await supabase
       .storage
       .from('avatars')
       .upload(`public/${urlImage}`, image, {
         contentType: 'image/png',
+        upsert: true
       });
 
     if (error) {
-      console.error(error);
+      console.error(error.message);
     } else {
       setAvatar(urlImage)
-      
+
       const { data, error } = await supabase.auth.updateUser({
         data: { avatar_url: urlImage }
       })
+
+      if (error) {
+        console.log(error.message);
+      } else {
+        window.location.reload()
+      }
     }
   };
 
@@ -55,7 +67,8 @@ export default function Account() {
 
   return (
     <>
-      <div className="w-full h-full bg-white border border-gray-200 rounded-lg shadow">
+      <ToastContainer />
+      <div className="w-full h-full bg-transparent bg-opacity-0 border border-gray-200 rounded-lg shadow">
         <div className="flex justify-end px-4 pt-4">
           <div className="dropdown dropdown-end">
             <div tabIndex={0} role="button" className="avatar">
@@ -66,15 +79,20 @@ export default function Account() {
               </button>
             </div>
             <ul tabIndex={0} className="menu dropdown-content z-[1] p-2 shadow bg-gray-100 rounded-box w-52 mt-4">
-              <li>Edit</li>
-              <li>Delete Account</li>
+              <li>
+                <button>Edit</button>
+              </li>
+              <li>
+                <button>Delete Account</button>
+              </li>
             </ul>
           </div>
         </div>
 
         <div className="flex flex-col items-center pb-10">
-          <img className="w-24 h-24 mb-3 rounded-full shadow-lg" src="/profile-avatar.png" alt="profile image" />
-          <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">{currentUser?.user_metadata.username}</h5>
+          <Tranquiluxe />
+          <img className="w-24 h-24 mb-3 rounded-full shadow-lg" src={`${storageURL}/${currentUser?.user_metadata.avatar_url}`} alt="profile image" />
+          <h3 className="mb-1 text-xl text-gray-900 font-extrabold">{currentUser?.user_metadata.username}</h3>
           <span className="text-sm text-gray-500 dark:text-gray-400">{currentUser?.email}</span>
           <span className="text-sm text-gray-500 dark:text-gray-600">Created at {dateFormatter(currentUser?.created_at)}</span>
           <div className="flex mt-4 md:mt-6">
@@ -83,20 +101,20 @@ export default function Account() {
             </button>
           </div>
           <dialog id="my_modal_3" className="modal">
-          <div className="modal-box">
-            <form method="dialog">
-              <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-                ✕
-              </button>
-              <AvatarPicker onAvatarChange={handleAvatarChange}/>
-            </form>
-          </div>
-        </dialog>
+            <div className="modal-box">
+              <form method="dialog">
+                <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                  ✕
+                </button>
+                <AvatarPicker onAvatarChange={handleAvatarChange} />
+              </form>
+            </div>
+          </dialog>
         </div>
       </div>
       <hr />
       <div className="w-full h-full bg-white border border-gray-200 rounded-lg shadow">
-        
+
       </div>
     </>
   );

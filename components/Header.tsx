@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 
 import supabase from "../app/supabaseClient";
 import { User } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
+  const router = useRouter()
   const [user, setUser] = useState<User>()
   const storageURL = "https://iovmeejceocblildcubg.supabase.co/storage/v1/object/public/avatars/public"
 
@@ -18,6 +19,8 @@ export default function Header() {
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (!error) {
+      localStorage.setItem("hasReloaded", "false")
+      router.push("/")
       window.location.reload()
     }
   };
@@ -64,7 +67,8 @@ export default function Header() {
 
         <div className="navbar-end gap-3">
           {/* Search Button */}
-          <button className="btn btn-ghost btn-circle">
+          <label className="input flex items-center gap-2">
+            <input type="text" className="grow" placeholder="Search" />
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-7 w-7"
@@ -79,24 +83,55 @@ export default function Header() {
                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
               />
             </svg>
-          </button>
-        
+          </label>
+
+          {/* Shopping Cart */}
+          <div>
+            <div className="drawer drawer-end z-auto">
+              <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
+              <div className="drawer-content">
+                <label htmlFor="my-drawer-4" className="drawer-button btn btn-ghost btn-circle">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-7 w-7"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                    /></svg>
+                </label>
+              </div>
+              <div className="drawer-side">
+                <label htmlFor="my-drawer-4" aria-label="close sidebar" className="drawer-overlay"></label>
+                <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
+                  Your cart is empty, for now :D
+                  {/* FUTURE IMPLEMENTATION: List of products added by the user */}
+                </ul>
+              </div>
+            </div>
+          </div>
+
           {/* Avatar */}
           {user?.id != null ? (
             <>
               <div className="dropdown dropdown-end">
                 <div tabIndex={0} role="button" className="avatar">
                   <div className="w-12 rounded-full">
-                    <img src={`${user?.id != null ? `${storageURL}/${user.user_metadata.avatar_url}`:`${storageURL}/profile-avatar.png`}`} alt="avatar" />
+                    <img src={`${user?.id != null ? `${storageURL}/${user.user_metadata.avatar_url}` : `${storageURL}/profile-avatar.png`}`} alt="avatar" />
                   </div>
                 </div>
-                <ul tabIndex={0} className="menu dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52 mt-4">
-                  <li>
-                    <div>
-                      <p className="font-bold">{user.user_metadata.username}</p>
-                      <p>{user.email}</p>
-                    </div>
-                  </li>
+                <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-52 mt-4">
+
+                  <div className="flex flex-col p-2">
+                    <p className="font-bold">{user.user_metadata.username}</p>
+                    <p>{user.email}</p>
+                  </div>
+
                   <hr />
                   <li><Link href="/account">Account</Link></li>
                   <hr />
@@ -130,37 +165,6 @@ export default function Header() {
                 />
               </svg>
             </Link>)}
-
-          {/* Shopping Cart */}
-          <div>
-            <div className="drawer drawer-end">
-              <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
-              <div className="drawer-content">
-                <label htmlFor="my-drawer-4" className="drawer-button btn btn-ghost btn-circle">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-7 w-7"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                    /></svg>
-                </label>
-              </div>
-              <div className="drawer-side">
-                <label htmlFor="my-drawer-4" aria-label="close sidebar" className="drawer-overlay"></label>
-                <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
-                  Your cart is empty, for now :D
-                  {/* FUTURE IMPLEMENTATION: List of products added by the user */}
-                </ul>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </>

@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useState } from 'react'
-import supabase from '../../supabaseClient';
+import React, { useEffect, useState } from 'react'
+import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/navigation'
+import supabase from '../../supabaseClient';
+
 import Link from 'next/link';
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -13,6 +15,7 @@ export default function Login() {
   const router = useRouter()
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [logged, setLogged] = useState<boolean>(false);
 
   const handleEmail = (event: React.FormEvent<HTMLInputElement>) => {
     setEmail(event.currentTarget.value)
@@ -61,6 +64,15 @@ export default function Login() {
       router.push("/")
     }
   }
+
+  // useEffect(() => {
+  //   const isLoggedIn = logged;
+
+  //   if (isLoggedIn) {
+  //     // Redirect to the home page if the user is already logged in
+  //     router.push('/');
+  //   }
+  // }, []);
 
 return (
   <>

@@ -21,21 +21,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  const { data: { user } } = await supabase.auth.getUser()
-
-  // if (user == true) {
-  //   const { error } = await supabase
-  //     .from('users')
-  //     .update({ username: user, email: user?.email })
-  //     .eq('id', user?.id)
-
-  //   if(error){
-  //     toast(error.message)
-  //   } else {
-  //     toast("Logged In")
-  //   }
-  // }
-
   return (
     <html lang="en" data-theme="lofi">
       <body className={inter.className}>
