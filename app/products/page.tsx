@@ -4,7 +4,7 @@ import supabase from "../supabaseClient";
 import { useEffect, useState } from "react";
 
 import ProductCard from "../../components/ProductCard";
-import HeroProduct from "../../components/HeroProduct";
+import HeroCustom from "../../components/HeroCustom";
 import Filters from "../../components/Filters";
 
 type Product = {
@@ -30,7 +30,7 @@ export default function Products() {
 
   return (
     <>
-      <HeroProduct />
+      <HeroCustom title="Shop" desc="Search for everything here!!"/>
       <Filters>
         <div className="p-5 flex items-center justify-center">
           <div className="grid grid-cols-3 gap-3">

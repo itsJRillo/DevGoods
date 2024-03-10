@@ -19,8 +19,8 @@ const subCategories = [
 ]
 const filters = [
   {
-    id: 'marcas',
-    name: 'Marcas',
+    id: 'brands',
+    name: 'Brands',
     options: [
       { value: 'HP', label: 'HP', checked: false },
       { value: 'Logitech', label: 'Logitech', checked: false },

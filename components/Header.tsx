@@ -3,17 +3,58 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import supabase from "../app/supabaseClient";
+import supabase from "@/app/supabaseClient";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
+import SmallCartItem from "./SmallCartItem";
 
 export default function Header() {
   const router = useRouter()
   const [user, setUser] = useState<User>()
+  const [cart, setCart] = useState<any>([])
+  const [items, setItems] = useState(0);
+
   const storageURL = "https://iovmeejceocblildcubg.supabase.co/storage/v1/object/public/avatars/public"
 
   useEffect(() => {
     setUser(JSON.parse(localStorage.getItem("sb-iovmeejceocblildcubg-auth-token") || "{}").user)
+  }, [])
+
+  const handleCart = async () => {
+    const { data, error } = await supabase.from("cart").select("*").eq("user_id", user?.id)
+    if (error) {
+      console.log(error)
+    } else {
+      setCart(data)
+      calculateTotalPrice(data)
+    }
+  }
+
+  const calculateTotalPrice = async (cart: any) => {
+    let totalPrice = 0;
+
+    for (const item of cart) {
+      const { data, error } = await supabase
+        .from("products")
+        .select('price')
+        .eq('id', item.product_id)
+        .single();
+
+      if (error) {
+        console.error('Error fetching product details:', error.message);
+        return;
+      }
+
+      if (data) {
+        totalPrice += data.price * item.quantity;
+      }
+    }
+
+    setItems(totalPrice)
+  }
+
+  useEffect(() => {
+    handleCart()
   }, [])
 
   const handleSignOut = async () => {
@@ -31,17 +72,7 @@ export default function Header() {
         <div className="navbar-start">
           <ul className="menu menu-horizontal px-1">
             <li>
-              <details>
-                <summary>Shop</summary>
-                <ul className="p-2 text-sm">
-                  <li>
-                    <Link href="/products">Products</Link>
-                  </li>
-                  <li>
-                    <Link href="/services">Services</Link>
-                  </li>
-                </ul>
-              </details>
+              <Link href="/products">Shop</Link>
             </li>
             <li>
               <Link href="/about">About Us</Link>
@@ -84,37 +115,6 @@ export default function Header() {
               />
             </svg>
           </label>
-
-          {/* Shopping Cart */}
-          <div>
-            <div className="drawer drawer-end z-auto">
-              <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
-              <div className="drawer-content">
-                <label htmlFor="my-drawer-4" className="drawer-button btn btn-ghost btn-circle">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-7 w-7"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                    /></svg>
-                </label>
-              </div>
-              <div className="drawer-side">
-                <label htmlFor="my-drawer-4" aria-label="close sidebar" className="drawer-overlay"></label>
-                <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
-                  Your cart is empty, for now :D
-                  {/* FUTURE IMPLEMENTATION: List of products added by the user */}
-                </ul>
-              </div>
-            </div>
-          </div>
 
           {/* Avatar */}
           {user?.id != null ? (
@@ -165,6 +165,60 @@ export default function Header() {
                 />
               </svg>
             </Link>)}
+
+          {/* Shopping Cart */}
+          <div>
+            <div className="drawer drawer-end z-auto">
+              <input id="my-drawer-4" type="checkbox" onClick={handleCart} className="drawer-toggle" />
+
+              <div className="drawer-content">
+                <label htmlFor="my-drawer-4" className="drawer-button btn btn-ghost btn-circle">
+                  <div className="indicator">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-7 w-7"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                      /></svg>
+                    <span className="badge badge-sm indicator-item rounded-full">{cart.length}</span>
+                  </div>
+                </label>
+              </div>
+              <div className="drawer-side">
+                <label htmlFor="my-drawer-4" aria-label="close sidebar" className="drawer-overlay"></label>
+                <div className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
+                  <p className="text-xl font-extrabold mb-2">Cart</p>
+                  <hr />
+                  <div className="my-5">
+                    {items != 0 ? (
+                      cart.map((c: any) => (
+                        <SmallCartItem key={c.id} productID={c.product_id} />
+                      ))
+                    ) : (
+                      <div className="text-sm font-bold">
+                        <p>There is nothing in the cart yet.</p>
+                      </div>
+                    )}
+                  </div>
+                  <hr />
+                  <span className="text-sm font-extrabold my-5 items-center">Subtotal: {items} €</span>
+                  <hr />
+                  <button type="button" className="min-w-[200px] px-4 py-2.5 border border-[#333] bg-transparent hover:bg-gray-50 text-[#333] text-sm font-bold rounded" onClick={() => {
+                    router.push("/cart")
+                  }}>Go to cart</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
         </div>
       </div>
     </>

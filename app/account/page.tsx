@@ -5,7 +5,7 @@ import { User } from '@supabase/supabase-js';
 import { decode } from 'base64-arraybuffer';
 
 import supabase from '../supabaseClient';
-import AvatarPicker from '../../components/AvatarPicker';
+import AvatarPicker from '@/components/AvatarPicker';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

@@ -1,6 +1,7 @@
+import { useRouter } from 'next/navigation'
 import React from 'react'
 
-type Card = {
+type Product = {
     id: number
     name: string
     price: number
@@ -8,10 +9,11 @@ type Card = {
     brand: string
 }
 
-export default function ProductCard({ name, price, description, brand, }: Card) {
+export default function ProductCard({ id, name, price, description}: Product) {
+    const router = useRouter()
     return (
         <>
-            <div className="card w-70 bg-base-100 shadow-xl">
+            <div className="card cursor-pointer w-70 hover:w-75 bg-base-100 shadow-xl" onClick={() => {router.push(`/products/${id}`)}}>
                 <figure><img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt={name} /></figure>
                 <div className="card-body">
                     <div className='flex flex-row justify-between'>

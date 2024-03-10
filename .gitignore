@@ -27,7 +27,6 @@ yarn-error.log*
 
 # local env files
 .env*.local
-.env.*
 .env
 
 # vercel
@@ -40,3 +39,5 @@ next-env.d.ts
 #text files
 *.txt
 
+
+.vercel
