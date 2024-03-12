@@ -2,11 +2,13 @@
 
 import React, { useEffect, useState } from 'react'
 import supabase from '@/app/supabaseClient'
-import ReviewUser from '@/components/reviewUser';
+import ReviewUser from '@/components/ReviewUser'
 import { useUser } from '@/app/utils/useUser'
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ReviewLayout from '@/components/ReviewLayout';
+import { Rating } from '@material-tailwind/react';
 
 type Product = {
     id: number
@@ -16,8 +18,18 @@ type Product = {
     brand: string
 }
 
+type Review = {
+    id: number
+    user_id: number
+    product_id: number
+    rating: number
+    comment: string
+    created_at: string
+}
+
 export default function ProductDetails(this: any, { params }: { params: { productID: string } }) {
     const [product, setProduct] = useState<Product>()
+    const [reviews, setReviews] = useState<Review[]>([])
     const currentUser = useUser()
 
     const getProduct = async () => {
@@ -30,8 +42,18 @@ export default function ProductDetails(this: any, { params }: { params: { produc
         }
     }
 
+    const getReviews = async () => {
+        const { data: review, error } = await supabase.from("reviews").select("*").eq("product_id", params.productID)
+        if (error) {
+            console.log(error.message);
+        } else {
+            setReviews(review)
+        }
+    }
+
     useEffect(() => {
         getProduct()
+        getReviews()
     }, [])
 
     const handleAddCart = async () => {
@@ -52,6 +74,13 @@ export default function ProductDetails(this: any, { params }: { params: { produc
 
     }
 
+    const openModal = () => {
+        const modal = document.getElementById('my_modal_3') as HTMLDialogElement | null;
+        if (modal) {
+            modal.showModal();
+        }
+    };
+
     const handleAddFavourites = () => {
 
     }
@@ -59,8 +88,8 @@ export default function ProductDetails(this: any, { params }: { params: { produc
     return (
         <>
             <ToastContainer />
-            <div className="font-[sans-serif] bg-white">
-                <div className="p-6 lg:max-w-7xl max-w-4xl mx-auto">
+            <div className="bg-white">
+                <div className="p-6 max-w-7xl mx-auto">
                     <div className="grid items-start grid-cols-1 lg:grid-cols-5 gap-12 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] p-6">
                         <div className="lg:col-span-3 w-full lg:sticky top-0 text-center">
                             <div className="px-4 py-10 rounded-xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] relative">
@@ -93,13 +122,7 @@ export default function ProductDetails(this: any, { params }: { params: { produc
                             </div>
                             <div className="flex space-x-2 mt-4">
 
-                                {new Array(5).fill(0).map((index) => (
-                                    <svg key={index} className="w-5 fill-[#CED5D8]" viewBox="0 0 14 13" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M7 0L9.4687 3.60213L13.6574 4.83688L10.9944 8.29787L11.1145 12.6631L7 11.2L2.8855 12.6631L3.00556 8.29787L0.342604 4.83688L4.5313 3.60213L7 0Z" />
-                                    </svg>
-                                ))}
+                                <Rating readonly placeholder value={0} />
 
                                 <h4 className="text-[#333] text-base">{0 /* FUTURE IMPLEMENTATION: ADD REVIEW COLUMN SUPABASE */} Reviews</h4>
                             </div>
@@ -115,6 +138,7 @@ export default function ProductDetails(this: any, { params }: { params: { produc
 
                     {/* Reviews */}
                     <div className="mt-16 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] p-6">
+
                         <h3 className="text-lg font-bold text-[#333]">Reviews(0{/* {reviews.length()} */})</h3>
                         <div className="grid md:grid-cols-2 gap-12 mt-6">
                             <div>
@@ -179,9 +203,26 @@ export default function ProductDetails(this: any, { params }: { params: { produc
                                         <p className="text-sm text-[#333] font-bold ml-3">0%</p>
                                     </div>
                                 </div>
+                                <hr className='my-5' />
+                                <div className='p-2'>
+                                    <h2 className='text-xl font-bold mb-3'>Rate this product</h2>
+                                    <p className='my-3'>Share your opinion with other customers</p>
+                                    <button className='btn btn-primary rounded w-full' onClick={openModal}>Write a review</button>
+
+                                    <dialog id="my_modal_3" className="modal">
+                                        <div className="modal-box">
+                                            <form method="dialog">
+                                                <ReviewLayout productID={product?.id} />
+                                            </form>
+                                        </div>
+                                    </dialog>
+                                </div>
                             </div>
+
                             <div>
-                                <ReviewUser />
+                                {reviews?.map((r: any) => (
+                                    <ReviewUser key={r.id} review={r}/>
+                                ))}
                                 <button type="button" className="rounded-full w-full mt-10 px-4 py-2.5 bg-transparent hover:bg-gray-50 border border-[#333] text-[#333] font-bold">Read all reviews</button>
                             </div>
                         </div>

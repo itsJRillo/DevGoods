@@ -9,11 +9,11 @@ type Product = {
     brand: string
 }
 
-export default function ProductCard({ id, name, price, description}: Product) {
+export default function ProductCard({ id, name, price, description }: Product) {
     const router = useRouter()
     return (
         <>
-            <div className="card cursor-pointer w-70 hover:w-75 bg-base-100 shadow-xl" onClick={() => {router.push(`/products/${id}`)}}>
+            <div className="card cursor-pointer w-70 transition ease-in-out delay-150 hover:scale-95 bg-base-100 shadow-xl" onClick={() => { router.push(`/products/${id}`) }}>
                 <figure><img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt={name} /></figure>
                 <div className="card-body">
                     <div className='flex flex-row justify-between'>
@@ -24,6 +24,7 @@ export default function ProductCard({ id, name, price, description}: Product) {
                         <h2 className='card-title'>{price}€</h2>
                     </div>
                     <p>{description}</p>
+                    <button className='btn btn-primary rounded hover:btn-secondary'>Check</button>
                 </div>
             </div>
         </>

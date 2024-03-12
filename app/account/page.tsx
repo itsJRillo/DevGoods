@@ -4,12 +4,14 @@ import React, { useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { decode } from 'base64-arraybuffer';
 
-import supabase from '../supabaseClient';
+import supabase from '@/app/supabaseClient';
 import AvatarPicker from '@/components/AvatarPicker';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 import { Tranquiluxe } from "uvcanvas"
+import { dateFormatter } from '@/app/utils';
 
 const storageURL = "https://iovmeejceocblildcubg.supabase.co/storage/v1/object/public/avatars/public"
 
@@ -32,7 +34,8 @@ export default function Account() {
     const base64 = avatar.split('base64,')[1];
     const image = decode(base64);
     const urlImage = `/avatar_${currentUser?.id}.png`;
-
+    console.log(urlImage);
+    
     const { data, error } = await supabase
       .storage
       .from('avatars')
@@ -45,7 +48,9 @@ export default function Account() {
       console.error(error.message);
     } else {
       setAvatar(urlImage)
-
+      
+      console.log();
+      
       const { data, error } = await supabase.auth.updateUser({
         data: { avatar_url: urlImage }
       })
@@ -118,19 +123,6 @@ export default function Account() {
       </div>
     </>
   );
-}
-
-function dateFormatter(date: string | undefined) {
-  if (!date) {
-    return "";
-  }
-
-  const formattedDate = new Date(date);
-  return formattedDate.toLocaleDateString("en-EN", {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
 }
 
 
