@@ -18,6 +18,7 @@
     "@supabase/supabase-js": "^2.39.7",
     "base64-arraybuffer": "^1.0.2",
     "dotenv": "^16.4.5",
+    "framer-motion": "^11.0.12",
     "next": "14.1.1",
     "react": "^18.2.0",
     "react-avatar-editor": "^13.0.2",
