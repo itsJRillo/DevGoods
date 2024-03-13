@@ -7,6 +7,7 @@ import ProductCard from "../../components/ProductCard";
 import HeroCustom from "../../components/HeroCustom";
 import Filters from "../../components/Filters";
 import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 type Product = {
   id: number
@@ -24,8 +25,6 @@ export default function Products() {
   async function getProducts() {
     const { data } = await supabase.from("products").select("*");
     setProducts(data);
-    console.log(data);
-    
   }
 
   useEffect(() => {

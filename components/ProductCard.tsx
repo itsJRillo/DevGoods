@@ -48,7 +48,7 @@ export default function ProductCard({ id, name, price, description, avatarUrl }:
                         <h2 className='card-title'>{price}€</h2>
                     </div>
                     <p className='text-ellipsis overflow-hidden whitespace-nowrap'>{description}</p>
-                    <button className='btn btn-primary rounded hover:btn-secondary' onClick={handleAddCart}>Add to Cart</button>
+                    <button className='btn btn-primary rounded hover:bg-white hover:text-black' onClick={handleAddCart}>Add to Cart</button>
                 </div>
             </div>
         </>

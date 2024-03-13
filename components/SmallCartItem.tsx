@@ -1,4 +1,5 @@
 import supabase from '@/app/supabaseClient';
+import { storageProductURL } from '@/app/utils';
 import React, { useEffect, useState } from 'react'
 
 type Product = {
@@ -7,6 +8,7 @@ type Product = {
     price: number
     description: string
     brand: string
+    photo_url: string
 }
 
 export default function SmallCartItem({ productID }: { productID: number }) {
@@ -36,8 +38,8 @@ export default function SmallCartItem({ productID }: { productID: number }) {
 
     return (
         <>
-            <div className="justify-between mb-6 rounded-lg bg-white p-6 shadow-md sm:flex sm:justify-start">
-                <img src="https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="product-image" className="w-20 rounded-lg sm:w-30" />
+            <div className="justify-between mb-6 rounded-lg bg-white p-6 shadow-md flex flex-col justify-center items-center">
+                <img src={`${storageProductURL}/${product?.photo_url}`} alt="product-image" className="w-full rounded-lg" />
                 <div className="sm:ml-4 sm:flex sm:w-full sm:justify-between">
                     <div className="mt-5 sm:mt-0 gap-1">
                         <h2 className="text-lg font-bold text-gray-900">{product?.name}</h2>
