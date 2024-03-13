@@ -10,24 +10,33 @@ const sortOptions = [
   { name: 'Price: Low to High', href: '#', current: false },
   { name: 'Price: High to Low', href: '#', current: false },
 ]
+
 const subCategories = [
   { name: 'Computers & Accesories', href: '#' },
-  { name: 'Headphones', href: '#' },
-  { name: 'Office Electronics', href: '#' },
-  { name: 'Wearable Technology', href: '#' },
-  { name: 'Accesories & Supplies', href: '#' },
+  { name: 'Peripherals', href: '#' },
+  { name: 'Audio', href: '#' },
+  { name: 'Smart Home', href: '#' },
+  { name: 'Mobile Devices', href: '#' },
 ]
+
 const filters = [
   {
     id: 'brands',
     name: 'Brands',
     options: [
-      { value: 'HP', label: 'HP', checked: false },
-      { value: 'Logitech', label: 'Logitech', checked: false },
-      { value: 'Epson', label: 'Epson', checked: false },
-      { value: 'Dell', label: 'Dell', checked: false },
-      { value: 'Alienware', label: 'Alienware', checked: false },
-      { value: 'Amazon Basics', label: 'Amazon Basics', checked: false },
+      { value: 'Apple', label: 'Apple', checked: false },
+      { value: 'LG', label: 'LG', checked: false },
+      { value: 'Razer', label: 'Razer', checked: false },
+      { value: 'SteelSeries', label: 'SteelSeries', checked: false },
+      { value: 'Bose', label: 'Bose', checked: false },
+      { value: 'ASUS', label: 'ASUS', checked: false },
+      { value: 'HyperX', label: 'HyperX', checked: false },
+      { value: 'Corsair', label: 'Corsair', checked: false },
+      { value: 'BenQ', label: 'BenQ', checked: false },
+      { value: 'Samsung', label: 'Samsung', checked: false },
+      { value: 'Nest', label: 'Nest', checked: false },
+      { value: 'Amazon', label: 'Amazon', checked: false },
+      { value: 'Keychron', label: 'Keychron', checked: false },
     ],
   }
 ]

@@ -1,5 +1,5 @@
 import supabase from '@/app/supabaseClient'
-import { dateFormatter } from '@/app/utils'
+import { dateFormatter, storageURL } from '@/app/utils'
 import { Rating } from '@material-tailwind/react'
 import React, { useEffect, useState } from 'react'
 
@@ -11,7 +11,6 @@ type ReviewUser = {
 }
 
 export default function ReviewUser({ review }: { review: any }) {
-    const storageURL = "https://iovmeejceocblildcubg.supabase.co/storage/v1/object/public/avatars/public"
     const [reviewUser, setReviewUser] = useState<ReviewUser>()
 
     const getUser = async () => {

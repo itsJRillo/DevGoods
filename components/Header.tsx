@@ -7,14 +7,13 @@ import supabase from "@/app/supabaseClient";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import SmallCartItem from "./SmallCartItem";
+import { storageURL } from "@/app/utils";
 
 export default function Header() {
   const router = useRouter()
   const [user, setUser] = useState<User>()
   const [cart, setCart] = useState<any>([])
   const [items, setItems] = useState(0);
-
-  const storageURL = "https://iovmeejceocblildcubg.supabase.co/storage/v1/object/public/avatars/public"
 
   useEffect(() => {
     setUser(JSON.parse(localStorage.getItem("sb-iovmeejceocblildcubg-auth-token") || "{}").user)
