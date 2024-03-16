@@ -39,7 +39,7 @@ export default function Products() {
         <div className="p-5 flex items-center justify-center">
           <div className="grid grid-cols-3 gap-3">
             {products?.map((p) => (
-              <ProductCard key={p.id} id={p.id} name={p.name} description={p.description} price={p.price} brand={p.brand} avatarUrl={p.photo_url}/>
+              <ProductCard key={p.id} product={p}/>
             ))}
           </div>
         </div>

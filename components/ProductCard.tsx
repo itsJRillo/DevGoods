@@ -11,12 +11,14 @@ type Product = {
     price: number
     description: string
     brand: string
-    avatarUrl: string
+    photo_url: string
 }
 
-export default function ProductCard({ id, name, price, description, avatarUrl }: Product) {
+export default function ProductCard({ product }: { product: Product }) {
     const router = useRouter()
     const user = useUser()
+
+    const { id, name, price, description, photo_url } = product;
 
     const handleAddCart = async () => {
 
@@ -34,11 +36,25 @@ export default function ProductCard({ id, name, price, description, avatarUrl }:
         }
     }
 
+    const handleCheckout = async () => {
+
+        const res = await fetch("/api/checkout", {
+            method: "POST",
+            body: JSON.stringify(product),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        const session = await res.json();
+
+        window.location = session.url;
+    }
+
 
     return (
         <>
             <div className="card w-70 bg-base-100 shadow-xl">
-                <figure><img onClick={() => { router.push(`/products/${id}`) }} src={`${storageProductURL}/${avatarUrl}`} alt={name} className='cursor-pointer' /></figure>
+                <figure><img onClick={() => { router.push(`/products/${id}`) }} src={`${storageProductURL}/${photo_url}`} alt={name} className='cursor-pointer' /></figure>
                 <div className="card-body">
                     <div className='flex flex-row justify-around gap-2'>
                         <h2 className="text-lg font-extrabold">
@@ -48,7 +64,10 @@ export default function ProductCard({ id, name, price, description, avatarUrl }:
                         <h2 className='card-title'>{price}€</h2>
                     </div>
                     <p className='text-ellipsis overflow-hidden whitespace-nowrap'>{description}</p>
-                    <button className='btn btn-primary rounded hover:bg-white hover:text-black' onClick={handleAddCart}>Add to Cart</button>
+                    <div className='flex gap-3'>
+                        <button className='btn btn-primary rounded hover:bg-white hover:text-black' onClick={handleAddCart}>Add to Cart</button>
+                        <button className='btn btn-primary bg-white text-black rounded hover:bg-black hover:text-white' onClick={handleCheckout}>Checkout</button>
+                    </div>
                 </div>
             </div>
         </>

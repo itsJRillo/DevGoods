@@ -127,10 +127,10 @@ export default function Account() {
           </dialog>
         </div>
       </div>
-      <hr className="w-48 h-1 mx-auto my-4 bg-gray-400 border-0 rounded md:my-10"></hr>
+      {/* <hr className="w-48 h-1 mx-auto my-4 bg-gray-400 border-0 rounded md:my-10"></hr>
       <div className="w-full h-full bg-white border border-gray-200 rounded-lg flex flex-row justify-around">
 
-        {/* Reviews */}
+        {/* Reviews 
         <div className='p-10 flex flex-col items-center'>
           <h1 className='text-2xl font-extrabold'>Reviews</h1>
           {reviews != null ? ((
@@ -140,7 +140,7 @@ export default function Account() {
           )))}
         </div>
 
-        {/* Favourites */}
+        {/* Favourites 
         <div className='p-10 flex flex-col items-center'>
           <h1 className='text-2xl font-extrabold'>Favorites</h1>
           {favorites != null ? (
@@ -150,7 +150,7 @@ export default function Account() {
             <></>
           )))}
         </div>
-      </div>
+      </div> */}
     </>
   );
 }
