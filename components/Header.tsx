@@ -4,20 +4,16 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import supabase from "@/app/supabaseClient";
-import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import SmallCartItem from "./SmallCartItem";
 import { storageURL } from "@/app/utils";
+import { useUser } from "@/app/utils/useUser";
 
 export default function Header() {
   const router = useRouter()
-  const [user, setUser] = useState<User>()
+  const user = useUser();
   const [cart, setCart] = useState<any>([])
   const [items, setItems] = useState(0);
-
-  useEffect(() => {
-    setUser(JSON.parse(localStorage.getItem("sb-iovmeejceocblildcubg-auth-token") || "{}").user)
-  }, [])
 
   const handleCart = async () => {
     const { data, error } = await supabase.from("cart").select("*").eq("user_id", user?.id)
@@ -59,7 +55,6 @@ export default function Header() {
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (!error) {
-      localStorage.setItem("hasReloaded", "false")
       router.push("/")
       window.location.reload()
     }
