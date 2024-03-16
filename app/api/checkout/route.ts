@@ -9,6 +9,9 @@ const stripe = new Stripe(
 export async function POST(rq: Request) {
   const body = await rq.json();
   
+  const product = body[0]
+  const user = body[1]
+  
   const session = await stripe.checkout.sessions.create({
     success_url: "http://localhost:3000/success",
     line_items: [
@@ -16,17 +19,23 @@ export async function POST(rq: Request) {
         price_data: {
           currency: "eur",
           product_data: {
-            name: body.name,
+            name: product.name,
             images: [
-              storageProductURL + body.photo_url
+              storageProductURL + product.photo_url
             ],
           },
-          unit_amount: body.price * 100,
+          unit_amount: product.price * 100,
         },
         quantity: 1,
       },
     ],
     mode: "payment",
+    metadata:{
+      product_id: product.id,
+      user_id: user.id,
+      username: user.user_metadata.username,
+      user_email: user.email
+    }
   });
 
   return NextResponse.json(session);

@@ -40,7 +40,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
         const res = await fetch("/api/checkout", {
             method: "POST",
-            body: JSON.stringify(product),
+            body: JSON.stringify([product, user]),
             headers: {
                 "Content-Type": "application/json",
             },
