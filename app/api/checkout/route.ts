@@ -13,7 +13,7 @@ export async function POST(rq: Request) {
   const user = body[1]
   
   const session = await stripe.checkout.sessions.create({
-    success_url: "http://localhost:3000/success",
+    success_url: "https://devgoods.vercel.app/success",
     line_items: [
       {
         price_data: {
