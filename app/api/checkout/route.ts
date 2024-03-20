@@ -14,47 +14,74 @@ export async function POST(rq: Request) {
 
   const user = body[1];
 
-  const lineItemsPromises = products.map(async (product: any) => {
-    const { data: productData, error } = await supabase
-    .from("products")
-    .select("*")
-    .eq("id", product.product_id);
+  let lineItems: any;
+  let lineItemsPromises: any;
+  let session;
+
+  if (Array.isArray(products)) {
+    lineItemsPromises = products.map(async (product: any) => {
+      const { data: productData, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("id", product.product_id);
   
-  if (error) {
-    console.log(error.message);
-    return null; // Return null if there's an error
-  } else {
-    const productInfo = productData[0]; // Access the first (and only) object in the array
-    console.log(productInfo);
-
-    return {
-      price_data: {
-        currency: "eur",
-        product_data: {
-          name: productInfo.name,
-          images: [storageProductURL + productInfo.photo_url],
-        },
-        unit_amount: productInfo.price * 100,
+      if (error) {
+        console.log(error.message);
+      } else {
+        const productInfo = productData[0];
+  
+        return {
+          price_data: {
+            currency: "eur",
+            product_data: {
+              name: productInfo.name,
+              images: [storageProductURL + productInfo.photo_url],
+            },
+            unit_amount: productInfo.price * 100,
+          },
+          quantity: 1,
+        };
+      }
+    });
+  
+    lineItems = await Promise.all(lineItemsPromises);
+    
+    session = await stripe.checkout.sessions.create({
+      success_url: "http://localhost:3000/success",
+      line_items: lineItems,
+      mode: "payment",
+      metadata: {
+        user_id: user.id,
+        username: user.user_metadata.username,
+        user_email: user.email,
       },
-      quantity: 1,
-    };
+    });
+  } else {
+    session = await stripe.checkout.sessions.create({
+      success_url: "http://localhost:3000/success",
+      line_items: [
+        {
+          price_data: {
+            currency: "eur",
+            product_data: {
+              name: products.name,
+              images: [storageProductURL + products.photo_url],
+            },
+            unit_amount: products.price * 100,
+          },
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      metadata: {
+        user_id: user.id,
+        username: user.user_metadata.username,
+        user_email: user.email,
+      },
+    });
   }
-  });
-
-  const lineItems = await Promise.all(lineItemsPromises);
-
-  const session = await stripe.checkout.sessions.create({
-    success_url: "http://localhost:3000/success",
-    line_items: lineItems,
-    mode: "payment",
-    metadata: {
-      user_id: user.id,
-      username: user.user_metadata.username,
-      user_email: user.email,
-    },
-  });
-
-  console.log(session);
 
   return NextResponse.json(session);
 }
+
+

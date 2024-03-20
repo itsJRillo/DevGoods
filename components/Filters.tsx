@@ -41,17 +41,16 @@ const filters = [
   }
 ]
 
-// @ts-ignore
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
-
 export default function FilterMenu({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+
+  function classNames(arg0: string, arg1: string, arg2: string): string | undefined {
+    throw new Error('Function not implemented.')
+  }
 
   return (
     <div className="bg-white">

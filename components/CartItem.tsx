@@ -15,6 +15,7 @@ type Product = {
 
 export default function CartItem({ productID }: { productID: number }) {
     const [product, setProduct] = useState<Product>()
+    const [quantity, setQuantity] = useState<number>(1);
 
     const getProduct = async () => {
         const { data, error } = await supabase.from("products").select("*").eq("id", productID)
@@ -26,6 +27,26 @@ export default function CartItem({ productID }: { productID: number }) {
         }
     }
 
+    const handleDeleteCart = async () => {
+        const user = JSON.parse(localStorage.getItem("sb-iovmeejceocblildcubg-auth-token") || "{}").user;
+        const { error } = await supabase.from("cart").delete().eq("user_id", user.id)
+        if (error) {
+            console.log(error.message);
+        } else {
+            window.location.reload();
+        }
+    }
+
+    const incrementQuantity = () => {
+        setQuantity(prevQuantity => prevQuantity + 1);
+    };
+
+    const decrementQuantity = () => {
+        if (quantity > 1) {
+            setQuantity(prevQuantity => prevQuantity - 1);
+        }
+    };
+
     useEffect(() => {
         getProduct()
     }, [])
@@ -34,18 +55,18 @@ export default function CartItem({ productID }: { productID: number }) {
         <>
             <div className="justify-between mb-6 rounded-lg bg-white p-6 shadow-md sm:flex sm:justify-start">
                 <img src={`${storageProductURL}/${product?.photo_url}`} alt="product-image" className="w-full rounded-lg sm:w-40" />
-                <div className="sm:ml-4 sm:flex sm:w-full sm:justify-between">
+                <div className="ml-4 flex w-full justify-between">
                     <div className="mt-5 sm:mt-0">
                         <h2 className="text-lg font-bold text-gray-900">{product?.name}</h2>
+                        <p className="text-sm">{product?.price} €</p>
                     </div>
                     <div className="mt-4 flex justify-between sm:space-y-6 sm:mt-0 sm:block sm:space-x-6">
-                        <div className="flex items-center border-gray-100">
-                            <span className="cursor-pointer rounded-l bg-gray-100 py-1 px-3.5 duration-100 hover:bg-blue-500 hover:text-blue-50"> - </span>
-                            <input className="h-8 w-8 border bg-white text-center text-xs outline-none" type="number" value="1" min="1" />
-                            <span className="cursor-pointer rounded-r bg-gray-100 py-1 px-3 duration-100 hover:bg-blue-500 hover:text-blue-50"> + </span>
+                        <div className="flex items-center">
+                            <button className="btn btn-xs" onClick={decrementQuantity}>-</button>
+                            <span className="mx-2">{quantity}</span>
+                            <button className="btn btn-xs" onClick={incrementQuantity}>+</button>
                         </div>
-                        <div className="flex items-center space-x-4">
-                            <p className="text-sm">{product?.price} €</p>
+                        <div className="flex items-center" onClick={handleDeleteCart}>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="h-5 w-5 cursor-pointer duration-150 hover:text-red-500">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
