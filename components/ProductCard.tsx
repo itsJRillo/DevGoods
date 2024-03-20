@@ -21,8 +21,7 @@ export default function ProductCard({ product }: { product: Product }) {
     const { id, name, price, description, photo_url } = product;
 
     const handleAddCart = async () => {
-
-        const { data, error } = await supabase
+        const { error } = await supabase
             .from('cart')
             .insert([
                 { user_id: user?.id, product_id: id, quantity: 1 },
@@ -37,7 +36,6 @@ export default function ProductCard({ product }: { product: Product }) {
     }
 
     const handleCheckout = async () => {
-
         const res = await fetch("/api/checkout", {
             method: "POST",
             body: JSON.stringify([product, user]),

@@ -35,11 +35,10 @@ export async function POST(rq: Request) {
       const session = await stripe.checkout.sessions.retrieve(
         event.data.object.id
       );
-      console.log(session);
 
       const { error } = await supabase
         .from("invoices")
-        .insert({ status: session.status, currency: session.currency, unit_amount: session.amount_total, product_id: session.metadata?.product_id, user_id: session.metadata?.user_id})
+        .insert({ status: session.status, currency: session.currency, unit_amount: session?.amount_total?? 0 , product_id: session.metadata?.product_id, user_id: session.metadata?.user_id})
         .select();
 
     console.log(error?.message);
