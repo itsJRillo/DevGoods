@@ -1,4 +1,5 @@
 import supabase from "@/app/supabaseClient";
+import { randomUUID } from "crypto";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
@@ -32,19 +33,44 @@ export async function POST(rq: Request) {
 
   switch (event.type) {
     case "checkout.session.completed": {
+      let uuidOrder = randomUUID();
       const session = await stripe.checkout.sessions.retrieve(
         event.data.object.id
       );
+      console.log(session);
+
+      const products = session.metadata?.products_id.includes(",")
+        ? session.metadata?.products_id.split(",")
+        : [session.metadata?.products_id];
 
       const { error } = await supabase
-        .from("invoices")
-        .insert({ status: session.status, currency: session.currency, unit_amount: session?.amount_total?? 0 , product_id: session.metadata?.product_id, user_id: session.metadata?.user_id})
+        .from("orders")
+        .insert({
+          id: uuidOrder,
+          user_id: session.metadata?.user_id,
+          quantity: products.length,
+        })
         .select();
+      console.log(error);
 
-    console.log(error?.message);
-        
+      for (const product_id of products) {
+        const product_id_number = Number(product_id) || 0;
+
+        const { error } = await supabase
+          .from("invoices")
+          .insert({
+            product_id: product_id_number,
+            total_amount: session?.amount_total ?? 0,
+            currency: session.currency,
+            user_id: session.metadata?.user_id,
+            status: session.status,
+            order_id: uuidOrder,
+          })
+          .select();
+        console.log(error);
+      }
+
       return NextResponse.json(session);
-
     }
     default:
       console.log("Evento no controlado: " + event.type);

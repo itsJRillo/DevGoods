@@ -2,6 +2,7 @@
 
 import supabase from '@/app/supabaseClient';
 import ReviewUser from '@/components/ReviewUser';
+import { User } from '@supabase/supabase-js';
 import React, { useEffect, useState } from 'react'
 
 type Review = {
@@ -14,11 +15,14 @@ type Review = {
 }
 export default function AccountReviews() {
 
+    let user: User;
+    if(typeof window!== 'undefined') {
+        JSON.parse(localStorage.getItem("sb-iovmeejceocblildcubg-auth-token") || "{}").user;
+    }
+
     const [reviews, setReviews] = useState<Review[] | null>([])
 
     const getReviews = async () => {
-        const user = JSON.parse(localStorage.getItem("sb-iovmeejceocblildcubg-auth-token") || "{}").user;
-        
         const { data: review, error } = await supabase.from("reviews").select("*").eq("user_id", user.id)
 
         if (error) {

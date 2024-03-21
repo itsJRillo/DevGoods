@@ -2,6 +2,7 @@
 
 import supabase from '@/app/supabaseClient';
 import { storageProductURL } from '@/app/utils';
+import { User } from '@supabase/supabase-js';
 import React, { useEffect, useState } from 'react'
 
 type Product = {
@@ -14,6 +15,11 @@ type Product = {
 }
 
 export default function CartItem({ productID }: { productID: number }) {
+    let user: User;
+    if (typeof window !== 'undefined') {
+        user = JSON.parse(localStorage.getItem("sb-iovmeejceocblildcubg-auth-token") || "{}").user;
+    }
+
     const [product, setProduct] = useState<Product>()
     const [quantity, setQuantity] = useState<number>(1);
 
@@ -28,7 +34,6 @@ export default function CartItem({ productID }: { productID: number }) {
     }
 
     const handleDeleteCart = async () => {
-        const user = JSON.parse(localStorage.getItem("sb-iovmeejceocblildcubg-auth-token") || "{}").user;
         const { error } = await supabase.from("cart").delete().eq("user_id", user.id)
         if (error) {
             console.log(error.message);

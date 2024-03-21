@@ -11,13 +11,13 @@ export async function POST(rq: Request) {
   const body = await rq.json();
 
   const products = body[0];
-
   const user = body[1];
 
   let lineItems: any;
   let lineItemsPromises: any;
+  let productsIDs: number[];
   let session;
-
+  
   if (Array.isArray(products)) {
     lineItemsPromises = products.map(async (product: any) => {
       const { data: productData, error } = await supabase
@@ -45,12 +45,17 @@ export async function POST(rq: Request) {
     });
   
     lineItems = await Promise.all(lineItemsPromises);
+    productsIDs = products.map((product: any) => product.product_id.toString());
     
     session = await stripe.checkout.sessions.create({
       success_url: "http://localhost:3000/success",
       line_items: lineItems,
+      shipping_address_collection: {
+        allowed_countries: ['US', 'CA', 'GB', 'AU', "ES"],
+      },
       mode: "payment",
       metadata: {
+        products_id: productsIDs.join(),
         user_id: user.id,
         username: user.user_metadata.username,
         user_email: user.email,
@@ -72,13 +77,18 @@ export async function POST(rq: Request) {
           quantity: 1,
         },
       ],
+      shipping_address_collection: {
+        allowed_countries: ['US', 'CA', 'GB', 'AU', "ES"],
+      },
       mode: "payment",
       metadata: {
+        products_id: products.id,
         user_id: user.id,
         username: user.user_metadata.username,
         user_email: user.email,
       },
     });
+    
   }
 
   return NextResponse.json(session);

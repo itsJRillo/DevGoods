@@ -2,18 +2,21 @@
 import React, { useEffect, useState } from 'react'
 import CartItem from '@/components/CartItem';
 import supabase from '../supabaseClient';
-import { useUser } from '../utils/useUser';
 import HeroCustom from '../../components/HeroCustom';
 import { useRouter } from 'next/navigation';
+import { User } from '@supabase/supabase-js';
 
 export default function Cart() {
-    const user = useUser();
+    let user: User;
+    if(typeof window!== 'undefined') {
+        user = JSON.parse(localStorage.getItem("sb-iovmeejceocblildcubg-auth-token") || "{}").user;
+    }
+
     const [cart, setCart] = useState<any>([])
     const [total, setTotal] = useState<number>()
     const router = useRouter()
 
     const handleCart = async () => {
-        const user = JSON.parse(localStorage.getItem("sb-iovmeejceocblildcubg-auth-token") || "{}").user;
         const { data, error } = await supabase.from("cart").select("*").eq("user_id", user.id)
 
         if (error) {
