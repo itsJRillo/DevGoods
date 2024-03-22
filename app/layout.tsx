@@ -22,7 +22,7 @@ export default async function RootLayout({
 }>) {
 
   return (
-    <html lang="en" data-theme="lofi">
+    <html lang="en" data-theme="cupcake">
       <body className={inter.className}>
         <Header />
 

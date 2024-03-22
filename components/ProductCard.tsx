@@ -1,18 +1,9 @@
 import supabase from '@/app/supabaseClient'
-import { storageProductURL, storageURL } from '@/app/utils'
+import { Product, storageProductURL, storageURL } from '@/app/utils'
 import { useUser } from '@/app/utils/useUser'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 import { toast } from 'react-toastify'
-
-type Product = {
-    id: number
-    name: string
-    price: number
-    description: string
-    brand: string
-    photo_url: string
-}
 
 export default function ProductCard({ product }: { product: Product }) {
     const router = useRouter()

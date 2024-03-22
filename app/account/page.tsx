@@ -1,32 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
-import { User } from '@supabase/supabase-js';
-import { decode } from 'base64-arraybuffer';
+import React from 'react';
 
-import supabase from '@/app/supabaseClient';
-import AvatarPicker from '@/components/AvatarPicker';
-
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { Tranquiluxe } from "uvcanvas"
-import { dateFormatter, storageURL } from '@/app/utils';
-import ReviewUser from '@/components/ReviewUser';
-import { useUser } from '../utils/useUser';
 import AccountCard from '@/components/AccountCard';
-
-type Review = {
-  id: number
-  user_id: number
-  product_id: number
-  rating: number
-  comment: string
-  created_at: string
-}
-
-type Favorite = {
-}
 
 export default function Account() {
   return (

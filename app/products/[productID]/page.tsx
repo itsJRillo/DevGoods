@@ -9,25 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ReviewLayout from '@/components/ReviewLayout';
 import { Rating } from '@material-tailwind/react';
-import { storageProductURL } from '@/app/utils';
-
-type Product = {
-    id: number
-    name: string
-    price: number
-    description: string
-    brand: string
-    photo_url: string
-}
-
-type Review = {
-    id: number
-    user_id: number
-    product_id: number
-    rating: number
-    comment: string
-    created_at: string
-}
+import { Product, Review, storageProductURL } from '@/app/utils';
 
 export default function ProductDetails(this: any, { params }: { params: { productID: string } }) {
     const [product, setProduct] = useState<Product>()

@@ -1,18 +1,9 @@
 "use client";
 
 import supabase from '@/app/supabaseClient';
-import { storageProductURL } from '@/app/utils';
+import { Product, storageProductURL } from '@/app/utils';
 import { User } from '@supabase/supabase-js';
 import React, { useEffect, useState } from 'react'
-
-type Product = {
-    id: number
-    name: string
-    price: number
-    description: string
-    brand: string
-    photo_url: string
-}
 
 export default function CartItem({ productID }: { productID: number }) {
     let user: User;

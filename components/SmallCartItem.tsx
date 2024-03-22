@@ -1,15 +1,6 @@
 import supabase from '@/app/supabaseClient';
-import { storageProductURL } from '@/app/utils';
+import { Product, storageProductURL } from '@/app/utils';
 import React, { useEffect, useState } from 'react'
-
-type Product = {
-    id: number
-    name: string
-    price: number
-    description: string
-    brand: string
-    photo_url: string
-}
 
 export default function SmallCartItem({ productID }: { productID: number }) {
     const [product, setProduct] = useState<Product>()

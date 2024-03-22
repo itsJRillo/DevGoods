@@ -1,17 +1,10 @@
 import supabase from '@/app/supabaseClient'
-import { dateFormatter, storageURL } from '@/app/utils'
+import { ReviewsUser, storageURL, dateFormatter } from '@/app/utils'
 import { Rating } from '@material-tailwind/react'
 import React, { useEffect, useState } from 'react'
 
-type ReviewUser = {
-    id: string
-    username: string
-    email: string
-    avatar_url: string
-}
-
 export default function ReviewUser({ review }: { review: any }) {
-    const [reviewUser, setReviewUser] = useState<ReviewUser>()
+    const [reviewUser, setReviewUser] = useState<ReviewsUser>()
 
     const getUser = async () => {
         const { data, error } = await supabase.from("users").select("*").eq("id", review.user_id)
