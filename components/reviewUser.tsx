@@ -8,20 +8,18 @@ export default function ReviewUser({ review }: { review: any }) {
 
     const getUser = async () => {
         const { data, error } = await supabase.from("users").select("*").eq("id", review.user_id)
-        if (error) {
-            console.log(error.message);
-        } else {
+        if (!error) {
             return data[0]
         }
     }
     useEffect(() => {
         const reviewUserPromise = getUser();
-    
+
         reviewUserPromise.then(reviewUser => {
             setReviewUser(reviewUser)
         });
     })
-    
+
 
     return (
 

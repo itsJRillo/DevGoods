@@ -17,18 +17,14 @@ export default function CartItem({ productID }: { productID: number }) {
     const getProduct = async () => {
         const { data, error } = await supabase.from("products").select("*").eq("id", productID)
 
-        if (error) {
-            console.log(error.message);
-        } else {
+        if (!error) {
             setProduct(data[0])
         }
     }
 
     const handleDeleteCart = async () => {
         const { error } = await supabase.from("cart").delete().eq("user_id", user.id)
-        if (error) {
-            console.log(error.message);
-        } else {
+        if (!error) {
             window.location.reload();
         }
     }

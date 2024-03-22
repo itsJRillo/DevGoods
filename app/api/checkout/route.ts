@@ -25,9 +25,7 @@ export async function POST(rq: Request) {
         .select("*")
         .eq("id", product.product_id);
   
-      if (error) {
-        console.log(error.message);
-      } else {
+      if (!error) {
         const productInfo = productData[0];
   
         return {

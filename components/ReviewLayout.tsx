@@ -23,9 +23,7 @@ export default function ReviewLayout({ productID }: { productID: number | undefi
                 ])
                 .select()
 
-            if (error) {
-                console.log(error.message);
-            } else {
+            if (!error) {
                 window.location.reload()
             }
         }

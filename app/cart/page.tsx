@@ -19,9 +19,7 @@ export default function Cart() {
     const handleCart = async () => {
         const { data, error } = await supabase.from("cart").select("*").eq("user_id", user.id)
 
-        if (error) {
-            console.log(error);
-        } else {
+        if (!error) {
             setCart(data)
             calculateTotalPrice(data)
         }

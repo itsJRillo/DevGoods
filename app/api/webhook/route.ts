@@ -24,7 +24,7 @@ export async function POST(rq: Request) {
       endpointSecret
     );
   } catch (error: any) {
-    console.log(error.message);
+    
     return NextResponse.json(
       { error: error.message },
       { status: error.status }
@@ -37,7 +37,6 @@ export async function POST(rq: Request) {
       const session = await stripe.checkout.sessions.retrieve(
         event.data.object.id
       );
-      console.log(session);
 
       const products = session.metadata?.products_id.includes(",")
         ? session.metadata?.products_id.split(",")
@@ -51,7 +50,6 @@ export async function POST(rq: Request) {
           quantity: products.length,
         })
         .select();
-      console.log(error);
 
       for (const product_id of products) {
         const product_id_number = Number(product_id) || 0;
@@ -67,7 +65,6 @@ export async function POST(rq: Request) {
             order_id: uuidOrder,
           })
           .select();
-        console.log(error);
       }
 
       return NextResponse.json(session);

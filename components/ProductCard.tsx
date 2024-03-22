@@ -19,9 +19,7 @@ export default function ProductCard({ product }: { product: Product }) {
             ])
             .select()
 
-        if (error) {
-            console.log(error);
-        } else {
+        if (!error) {
             toast.success("Item added to the cart")
         }
     }

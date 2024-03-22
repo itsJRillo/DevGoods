@@ -8,9 +8,7 @@ export default function OrderItem(product: any) {
     const getProductOrder = async () => {
         const { data, error } = await supabase.from("products").select("*").eq("id", product.product.product_id);
 
-        if (error) {
-            console.log(error.message);
-        } else {
+        if (!error) {
             setData(data[0]);
         }
     }

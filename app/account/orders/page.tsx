@@ -30,9 +30,7 @@ export default function Orders() {
       // })
       .eq("user_id", user.id);
 
-    if (error) {
-      console.log(error.message);
-    } else {
+    if (!error) {
       const listOrders = order.map((order: any) => order.id)
       let invoices: any = [];
 

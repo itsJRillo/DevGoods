@@ -22,18 +22,14 @@ export default function ProductDetails(this: any, { params }: { params: { produc
     const getProduct = async () => {
         const { data, error } = await supabase.from("products").select("*").eq("id", params.productID)
 
-        if (error) {
-            console.log(error.message);
-        } else {
+        if (!error) {
             setProduct(data[0])
         }
     }
 
     const getReviews = async () => {
         const { data: review, error } = await supabase.from("reviews").select("*").eq("product_id", params.productID)
-        if (error) {
-            console.log(error.message);
-        } else {
+        if (!error) {
             setReviews(review)
         }
     }
@@ -52,10 +48,7 @@ export default function ProductDetails(this: any, { params }: { params: { produc
             ])
             .select()
 
-        if (error) {
-            console.log(error);
-        } else {
-            console.log(data);
+        if (!error) {
             toast.success("Item added to the cart")
         }
 

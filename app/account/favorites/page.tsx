@@ -25,9 +25,7 @@ export default function AccountReviews() {
     const getReviews = async () => {
         const { data: review, error } = await supabase.from("reviews").select("*").eq("user_id", user.id)
 
-        if (error) {
-            console.log(error.message);
-        } else {
+        if (!error) {
             setReviews(review)
         }
     }

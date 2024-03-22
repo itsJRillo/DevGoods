@@ -9,9 +9,7 @@ export default function SmallCartItem({ productID }: { productID: number }) {
     const getProduct = async () => {
         const { data, error } = await supabase.from("products").select("*").eq("id", productID)
 
-        if (error) {
-            console.log(error.message);
-        } else {
+        if (!error) {
             setProduct(data[0])
         }
     }
@@ -19,7 +17,7 @@ export default function SmallCartItem({ productID }: { productID: number }) {
     const handleDeleteFromCart = async () => {
         const { error } = await supabase.from("cart").delete().eq("product_id", productID)
         if (error) {
-            console.log(error.message);
+            return;
         }
         window.location.reload()
     }
